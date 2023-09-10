@@ -1,13 +1,11 @@
-
 /*
     Esteban Sierra Baccio
     A00836286
+    10 Sep 2023
 */
 
-#include <iostream>     // Importamos la biblioteca iostream
-#include <string.h>     // Importamos la biblioteca string.h
-#include <algorithm>
-#include <cctype>
+#include <iostream>     // "iostream" permite la interacción con la termimnal
+#include <string.h>     // "string.h" permite el uso de la clase *string*
 
 class Date{
     private:
@@ -19,12 +17,8 @@ class Date{
         int second;
         int millisecond;
     public:
-    /*
-        Constructores que asignan los siguientes valores en orden:
-        año, mes, dias, horas, minutos, segundos, milisegundos.
-        Todos los valores de entrada son enteros y no tienen salidas.
-        Se puede poner desde los 0 valores hasta los 7 en el mismo formato.
-    */
+
+    // Constructores
         Date(int years, int months, int days, int hours, int minutes, int seconds, int milliseconds){year = years;month = months;day = days;hour = hours;minute = minutes;second = seconds;millisecond = milliseconds;};
         Date(int years, int months, int days, int hours, int minutes, int seconds){year = years;month = months;day = days;hour = hours;minute = minutes;second = seconds;millisecond = 0;};
         Date(int years, int months, int days, int hours, int minutes){year = years;month = months;day = days;hour = hours;minute = minutes;second = 0;millisecond = 0;};
@@ -58,55 +52,9 @@ class Date{
         int getMonthAsNumber(string value); // Entrada: un string. Salida: Un número que representa el valor.
 
     // Sobrecarga de operadores
-
-        bool operator > (const Date& b) const{
-            if(this->year != b.year)
-                return this->year > b.year;
-            else if(this -> month != b.month)
-                return this->month > b.month;
-            else if(this -> day != b.day)
-                return this -> day > b.day;
-            else if(this -> hour != b.hour)
-                return this -> hour > b.hour;
-            else if(this -> minute != b.minute)
-                return this -> minute > b.minute;
-            else if(this -> second != b.second)
-                return this -> second > b.second;
-            else if(this -> millisecond != b.millisecond)
-                return this -> millisecond > b.millisecond;
-            else return false;
-        }
-
-        bool operator < (const Date& b) const{
-            if(this->year != b.year)
-                return this->year < b.year;
-            else if(this -> month != b.month)
-                return this->month < b.month;
-            else if(this -> day != b.day)
-                return this -> day < b.day;
-            else if(this -> hour != b.hour)
-                return this -> hour < b.hour;
-            else if(this -> minute != b.minute)
-                return this -> minute < b.minute;
-            else if(this -> second != b.second)
-                return this -> second < b.second;
-            else if(this -> millisecond != b.millisecond)
-                return this -> millisecond < b.millisecond;
-            else return false;
-        }
-
-        Date operator + (const Date& b) const{
-            int newYear = this->year + b.year;
-            int newMonth = this->month + b.month;
-            int newDay = this->day + b.day;
-            int newHour = this->hour + b.hour;
-            std::cout << hour << std::endl;
-            int newMinute = this->minute + b.minute;
-            int newSecond = this->second + b.second;
-            int newMillisecond = this->millisecond + b.millisecond;
-            return Date(newYear, newMonth, newDay, newHour, newMinute, newSecond, newMillisecond);
-
-        }
+        bool operator > (const Date& b);
+        bool operator < (const Date& b);
+        Date operator + (const Date& b);
 };
 
 void Date::setYear(int num){year = num;};
@@ -136,7 +84,7 @@ std::string Date::getTime(){
 
 std::string Date::formatDate(){
     std::string yearStr = formatNumber(year);
-    std::string monthStr = formatNumber(month);
+    std::string monthStr = formatNumber(month + 1);
     std::string dayStr = formatNumber(day);
 
     return dayStr + "/" + monthStr + "/" + yearStr;
@@ -150,4 +98,54 @@ std::string Date::formatNumber(int number){
     std::string valueStr;
     number<10 ? valueStr = "0" + std::to_string(number) : valueStr = std::to_string(number);
     return valueStr;
+}
+
+// SOBRECARGA DE OPERADORES
+
+Date Date::operator + (const Date& b) {
+    int newYear = this->year + b.year;
+    int newMonth = this->month + b.month;
+    int newDay = this->day + b.day;
+    int newHour = this->hour + b.hour;
+    std::cout << hour << std::endl;
+    int newMinute = this->minute + b.minute;
+    int newSecond = this->second + b.second;
+    int newMillisecond = this->millisecond + b.millisecond;
+    return Date(newYear, newMonth, newDay, newHour, newMinute, newSecond, newMillisecond);
+}
+
+bool Date::operator < (const Date& b){
+    if(this->year != b.year)
+        return this->year < b.year;
+    else if(this -> month != b.month)
+        return this->month < b.month;
+    else if(this -> day != b.day)
+        return this -> day < b.day;
+    else if(this -> hour != b.hour)
+        return this -> hour < b.hour;
+    else if(this -> minute != b.minute)
+        return this -> minute < b.minute;
+    else if(this -> second != b.second)
+        return this -> second < b.second;
+    else if(this -> millisecond != b.millisecond)
+        return this -> millisecond < b.millisecond;
+    else return false;
+}
+
+bool Date::operator > (const Date& b){
+    if(this->year != b.year)
+        return this->year > b.year;
+    else if(this -> month != b.month)
+        return this->month > b.month;
+    else if(this -> day != b.day)
+        return this -> day > b.day;
+    else if(this -> hour != b.hour)
+        return this -> hour > b.hour;
+    else if(this -> minute != b.minute)
+        return this -> minute > b.minute;
+    else if(this -> second != b.second)
+        return this -> second > b.second;
+    else if(this -> millisecond != b.millisecond)
+        return this -> millisecond > b.millisecond;
+    else return false;
 }
