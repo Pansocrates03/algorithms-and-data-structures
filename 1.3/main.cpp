@@ -13,18 +13,17 @@ using namespace std;
 #include "funciones.cpp"
 
 #include <cstdlib>
-#include <vector>
 #include <typeinfo>
 
 int main() {
+
+    // Abre el archivo bitacora.txt
 	fstream my_file;
 	my_file.open("bitacora.txt", ios::in);
 	if (!my_file) cout << "No such file";
 	else {
 
         string linea;
-        getline(my_file, linea);
-
         Error errList[16808];
         int lineNumber = 0;
         
@@ -78,26 +77,24 @@ int main() {
             errList[lineNumber] = nerr;
 
             lineNumber = lineNumber + 1;
-
         } 
-                
+        // Se cierra el archivo 
         my_file.close();
-        print("Se cargo el archivo correctamente.");
 
-        string respuestaStr = input<string>("¿Te gustaría ordenar la lista por fecha? [Y/N] ");
+
+        print("Se cargo el archivo correctamente.");
         print("Ordenando...");
 
 
-        int n = 1805;
         bool interruptor = true;
         int pasada;
         
-        // Se ordena por mes el arreglo de errores
-        for (pasada=0; pasada<n-1 && interruptor; pasada++) { 
+        // Se ordena por fecha el arreglo de errores a través de un bubblesort. Dificultad: O(n^2)
+        for (pasada=0; pasada< lineNumber - 1 && interruptor; pasada++) { 
             interruptor = false; // no se han hecho intercambios
             int j;
-            for (j=0; j<n-1-pasada; j++) { 
-                if (errList[j+1].getFecha().getMonth() < errList[j].getFecha().getMonth()) {
+            for (j = 0; j < lineNumber - 1-pasada; j++) { 
+                if (errList[j+1].getFecha() < errList[j].getFecha()) {
                     Error tmp;
                     tmp = errList[j]; 
                     errList[j] = errList[j+1]; 
@@ -107,23 +104,38 @@ int main() {
             } 
         } 
         print("Ya se ha ordenado :)");
-        int mesInicial = input<int>("¿A partir de qué mes quieres ver los errores? [1..12] ");
-        int mesFinal = input<int>("¿Hasta qué mes quieres ver los erroes? [1...12] ");
 
-        ofstream bitfiltrada("bitfiltrada.txt");
+        int* fechaInicial;
+        fechaInicial = input("¿A partir de qué fecha quieres ver los errores? [dd mm] ", 2);
+        Date fechaInicialDate = Date(0,fechaInicial[1]-1, fechaInicial[0]);
+        print("fecha inicial: " + fechaInicialDate.formatDate());
+
+        int* fechaFinal;
+        fechaFinal = input("¿Hasta qué mes quieres ver los erroes? [dd mm] ", 2);
+        Date fechaFinalDate = Date(0,fechaFinal[1]-1, fechaFinal[0]);
+        print("Fecha final: " + fechaFinalDate.formatDate());
+
+
         
-
+        
+        
+        ofstream bitfiltrada("bitfiltrada.txt");
         string bitf_linea = "";
-        for (int index = 0; index < 1860; index++){
-            if(errList[index].getFecha().getMonth() > mesInicial && errList[index].getFecha().getMonth() > mesInicial < mesFinal){
+
+        // Se filtra la información en un string. Dificultad: O(n)
+        for (int index = 0; index < lineNumber; index++){
+            if(errList[index].getFecha() > fechaInicialDate && errList[index].getFecha() < fechaFinalDate){
                 string mes = getNumberAsMonth(errList[index].getFecha().getMonth());
                 string dia = to_string(errList[index].getFecha().getDay());
                 string hora = errList[index].getFecha().getTime();
                 string ip = errList[index].getIP();
                 string razon = errList[index].getRazon();
 
-                bitf_linea = bitf_linea + mes + "" + dia + " " + hora + " " + ip + " " + razon + "\n";
+                bitf_linea = bitf_linea + mes + " " + dia + " " + hora + " " + ip + " " + razon + "\n";
 
+            }
+            else{
+                //print("Fuera de las fechas pedidas");
             }
         }
         bitfiltrada << bitf_linea;
