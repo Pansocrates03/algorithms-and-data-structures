@@ -2,15 +2,16 @@
 #include <string.h>
 using namespace std;
 
-
-void printArray(int arr[], int size){   
+// Prints an array separated by spaces in the terminal
+template <class T>
+void printArray(T arr[], int size){   
     int i = 0;
     for (i = 0; i < size; i++)
         cout << arr[i] << " ";
     cout << endl;
 }
 
-
+// Inputs a value
 template <class T>
 T input(string textoPrevio){
     cout << textoPrevio;
@@ -20,11 +21,32 @@ T input(string textoPrevio){
 }
 
 
+
+//	int* ptr; //pointer to hold address
+//	ptr = input("textoprevio: ",7); //address 
+
+int* input(string textoPrevio, int nvalues){ //return type- address of integer array
+
+    cout << textoPrevio;
+
+	static int a[100]; //array declared as static. Max 100 values
+	for(int i = 0; i<nvalues; i++){
+        int num;
+        cin >> num;
+		a[i] = num; //array initialisation
+	}
+
+	return a; //address of a returned
+}
+
+
+
+// Display a value in the terminal
 void print(string thisIsAString){
     cout << thisIsAString << endl;
 }
 
-
+// Checks if a string is a month
 int getMonthAsNumber(string value){
     if(value == "Jan") return 0;
     if(value == "Feb") return 1;
@@ -41,6 +63,7 @@ int getMonthAsNumber(string value){
     else return -1;
 }
 
+// Checks if a month is a string
 string getNumberAsMonth(int value){
     if(value == 0) return "Jan";
     if(value == 1) return "Feb";
